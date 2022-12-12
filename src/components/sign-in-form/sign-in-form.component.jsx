@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState,  } from "react"
 import './sign-in-form.styles.scss'
 
 import FormInput from "../form-input/form-input.component"
@@ -15,6 +15,8 @@ const defaultFormFields = {
 const SignInForm= () => {
 const [formFields, setFormFields] = useState(defaultFormFields)
 const { email, password } = formFields
+
+
 
     /* Sign in w/ redirect option
     useEffect(() => {
@@ -38,17 +40,17 @@ const resetFormFields = () => {
 }
 
 const signInWithGoogle = async () => {
-    const {user} = await signInWithGooglePopup()
-    await createUserDocumentFromAuth(user)
+    await signInWithGooglePopup()
 }
 
 
 const handleSubmit = async (e) => {
     e.preventDefault()
     try{
-        const response = await signInUserWithEmailAndPassword(email, password)
+        const { user } = await signInUserWithEmailAndPassword(email, password)
         resetFormFields()
-        console.log(response)
+
+        console.log(user)
     }catch(error){
         switch(error.code){
             case 'auth/wrong password':
