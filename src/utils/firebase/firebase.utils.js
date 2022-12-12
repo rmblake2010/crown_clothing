@@ -1,6 +1,6 @@
 // Imports firebase app instance to access firestore
 import { initializeApp } from 'firebase/app'
-import { getAuth, signInWithRedirect, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword } from 'firebase/auth'
+import { getAuth, signInWithRedirect, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth'
 
 import {
     getFirestore,
@@ -31,6 +31,7 @@ const firebaseConfig = {
   export const auth = getAuth()
   export const signInWithGooglePopup = () => signInWithPopup(auth, googleProvider)
   export const signInWithGoogleRedirect = () => signInWithRedirect(auth, googleProvider)
+  
 
   export const db = getFirestore()
   
@@ -59,6 +60,21 @@ const firebaseConfig = {
         }
     }
     return userDocRef
+  }
+
+
+  export const signInUserWithEmailAndPassword = async (email, password) => {
+    signInWithEmailAndPassword(auth, email, password)
+    .then((userCredential) => {
+      const user = userCredential.user
+      console.log(user)
+    })
+    .catch((err) => {
+      const errorCode = err.code
+      const errorMessage = err.message
+      alert(errorMessage)
+    })
+
   }
 
   export const createAuthUserWithEmailAndPassword = async (email, password) => {
