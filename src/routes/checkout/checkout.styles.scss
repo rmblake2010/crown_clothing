@@ -1,0 +1,30 @@
+.checkout-header{
+    display: flex;
+    justify-content: space-between;
+    width: 80%;
+    margin: auto;
+
+
+
+
+}
+
+
+
+.checkout-item-container{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 5rem;
+    width: 85%;
+
+    img{
+        width: 10%;
+        
+    }
+}
+
+.quantity-container{
+    display: flex;
+    
+}
