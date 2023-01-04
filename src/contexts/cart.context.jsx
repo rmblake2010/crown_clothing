@@ -20,16 +20,13 @@ const addCartItem = (cartItems, productToAdd) => {
     return [...cartItems, {...productToAdd, quantity: 1},]
 }
 
-const removeCartItem = (cartItems, productToRemove) => {
+const decrementCartItem = (cartItems, productToRemove) => {
     // if quantity is 0 then remove cart item entirely 
-
 
 
     return cartItems.map((cartItem) => 
         cartItem.id === productToRemove.id
         ? {...cartItem, quantity: cartItem.quantity-1}
-        : productToRemove.quantity === 0 
-        ? {}
         : cartItem
     )
 
@@ -44,6 +41,7 @@ export const CartContext = createContext({
     cartItems: [],
     addItemToCart: () => {},
     cartQuantity: 0,
+    totalCartPrice: 0
 
 })
 
@@ -56,11 +54,17 @@ export const CartProvider = ({children}) => {
     const [isCartOpen, setIsCartOpen] = useState(false)
     const [cartItems, setCartItems] = useState([])
     const [cartQuantity, setCartQuantity] = useState(0)
+    const [totalCartPrice, setTotalCartPrice] = useState(0)
 
     //Updating cart quantity
     useEffect(() => {
         const newCartCount = cartItems.reduce(
             (total, cartItem) => total + cartItem.quantity, 0)
+
+        const newCartPrice = cartItems.reduce(
+            (total, cartItem) => (total + cartItem.price) * cartItem.quantity, 0
+        )
+        setTotalCartPrice(newCartPrice)
         setCartQuantity(newCartCount)
     }, [cartItems])
 
@@ -70,10 +74,12 @@ export const CartProvider = ({children}) => {
     }
 
     const decrementItemFromCart = (productToRemove) => {
-        setCartItems(removeCartItem(cartItems, productToRemove))
+        setCartItems(decrementCartItem(cartItems, productToRemove))
     }
 
-    const value = {isCartOpen, setIsCartOpen, addItemToCart, decrementItemFromCart ,cartItems, setCartItems, setCartQuantity, cartQuantity}
+
+
+    const value = {isCartOpen, setIsCartOpen, addItemToCart, decrementItemFromCart ,cartItems, setCartItems, setCartQuantity, cartQuantity, totalCartPrice}
 
     return(
         <CartContext.Provider value={value}>{children}</CartContext.Provider>

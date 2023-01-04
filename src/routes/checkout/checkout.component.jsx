@@ -4,26 +4,10 @@ import { CartContext } from "../../contexts/cart.context"
 import './checkout.styles.scss'
 
 
-/*
-I need:
-cart context
-cart items
-quantity
-adjust quantity
-
-
-
-ability to remove items
-
-
-
-total price
-*/
-
 const HEADERS = ['Product', 'Description', 'Quantity', 'Price', 'Remove']
 
 const Checkout = () => {
-    const { cartItems, decrementItemFromCart, addItemToCart  } = useContext(CartContext)
+    const { cartItems, decrementItemFromCart, addItemToCart, setCartItems, totalCartPrice } = useContext(CartContext)
     
     
 
@@ -43,14 +27,23 @@ const Checkout = () => {
             const {id, imageUrl, name, quantity, price} = item
 
             const reduceQuantity = () => {
-                decrementItemFromCart(item)
+                if(item.quantity === 0 ){
+                    const newCartItems = cartItems.filter((cartItem) => cartItem.id !== item.id) 
+                    setCartItems(newCartItems)
+                }else{
+                    decrementItemFromCart(item)
+                }
             }
 
             const increaseQuantity = () => {
                 addItemToCart(item)
             }
 
-
+            const deleteButton = () => {
+                const newCartItems = cartItems.filter((cartItem) => cartItem.id !== item.id) 
+                setCartItems(newCartItems)
+            }
+  
             return(
                 <div >
                     <div key={id} className="checkout-item-container">
@@ -61,16 +54,16 @@ const Checkout = () => {
                             <h4>{quantity}</h4>
                             <button onClick={increaseQuantity}>+</button>
                         </div>
-                        <h4>{price}</h4>
-                        <button> remove</button>    
+                        <h4>{price * quantity}</h4>
+                        <button onClick={deleteButton}> remove</button>    
                     </div>
-                <hr/>
+                <hr/>              
                 </div>
             )
         })}
         
         
-        
+        <h2>{`Price total: $${totalCartPrice}`}</h2>
     </div>
   )
 }
